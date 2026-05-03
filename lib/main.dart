@@ -8,10 +8,14 @@ import 'screens/home_shell.dart';
 import 'screens/design_detail_screen.dart';
 import 'screens/projection_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final authService = AuthService();
+  await authService.restoreSession();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => AuthService(),
+    ChangeNotifierProvider.value(
+      value: authService,
       child: const ZardozApp(),
     ),
   );

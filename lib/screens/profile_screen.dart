@@ -76,9 +76,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 16),
                 OutlinedButton.icon(
-                  onPressed: () {
-                    auth.logout();
-                    Navigator.pushReplacementNamed(context, '/');
+                  onPressed: () async {
+                    await auth.logout();
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(context, '/');
+                    }
                   },
                   icon: const Icon(Icons.logout, size: 18),
                   label: const Text('Logout'),

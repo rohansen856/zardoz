@@ -20,4 +20,12 @@ class User {
         createdAt: json['created_at'] ?? '',
         designCount: json['design_count'],
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'username': username,
+        'created_at': createdAt,
+        if (designCount != null) 'design_count': designCount,
+      };
 }
