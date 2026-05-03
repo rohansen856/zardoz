@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/design.dart';
 import '../services/api_service.dart';
+import '../widgets/cast_sheet.dart';
 
 class DesignDetailScreen extends StatefulWidget {
   final int designId;
@@ -184,10 +185,21 @@ class _DesignDetailScreenState extends State<DesignDetailScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: OutlinedButton.icon(
+                      onPressed: () => showCastSheet(context, imageUrl),
+                      icon: const Icon(Icons.cast, size: 20),
+                      label: const Text('Cast to Projector'),
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Center(
                     child: Text(
-                      'Connect a projector and project this design onto fabric',
+                      'Send the design directly to a WiFi-connected projector',
                       style: TextStyle(fontSize: 12, color: Colors.grey[400]),
                     ),
                   ),

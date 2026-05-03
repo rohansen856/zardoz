@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../services/cast_service.dart';
+import '../widgets/cast_sheet.dart';
 
 /// Fullscreen projection mode for projecting embroidery designs onto fabric.
 /// Supports zoom, pan, rotation, opacity control, color inversion, and grid overlay.
@@ -23,10 +25,12 @@ class _ProjectionScreenState extends State<ProjectionScreen> {
   bool _showGrid = false;
   bool _mirrorH = false;
   final _transformCtl = TransformationController();
+  final _cast = CastService();
 
   @override
   void initState() {
     super.initState();
+    _cast.addListener(_onCastChanged);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
@@ -39,10 +43,15 @@ class _ProjectionScreenState extends State<ProjectionScreen> {
 
   @override
   void dispose() {
+    _cast.removeListener(_onCastChanged);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _transformCtl.dispose();
     super.dispose();
+  }
+
+  void _onCastChanged() {
+    if (mounted) setState(() {});
   }
 
   void _autoHideControls() {
@@ -152,6 +161,14 @@ class _ProjectionScreenState extends State<ProjectionScreen> {
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            _cast.isCasting ? Icons.cast_connected : Icons.cast,
+                            color: _cast.isCasting ? Colors.greenAccent : Colors.white70,
+                          ),
+                          tooltip: _cast.isCasting ? 'Casting' : 'Cast to projector',
+                          onPressed: () => showCastSheet(context, widget.imageUrl),
                         ),
                         IconButton(
                           icon: const Icon(Icons.refresh, color: Colors.white70),
